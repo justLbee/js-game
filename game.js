@@ -122,29 +122,60 @@ class Actor {
 		// 	&& this.bottom > actor.bottom) || this.left === actor.left) {
 		// 	return true;
 		// }
-		console.log(`Sravnenie: ${this.left} >= ${actor.left} : ${this.left < actor.left}`);
-		if(!(this === actor)) {
+		// console.log(`Sravnenie: ${this.left} < ${actor.left} : ${this.left < actor.left}`);
+		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
+		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
+		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
+		// console.log(`Sravnenie: ${this.left} > ${actor.left} : ${this.left > actor.left}`);
+		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
+		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
+		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
+		// console.log(`Sravnenie: ${this.left} < ${actor.left} : ${this.left < actor.left}`);
+		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
+		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
+		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
+		// console.log(`${this !== actor}`);
+		console.log(`${((topPlayerLeft.x >= topRight.x && topPlayerLeft.y <= topRight.y) &&
+			(bottomPlayerLeft.x >= topRight.x && bottomPlayerLeft.y >= bottomRight.y)) ||
+		((topPlayerRight.x <= topLeft.x && topPlayerRight.y <= topLeft.y) &&
+			(bottomPlayerRight.x <= bottomLeft.x && bottomPlayerRight.y <= bottomLeft.y))}`);
 
-			if (((topPlayerLeft.x >= topRight.x && topPlayerLeft.y <= topRight.y) &&
-					(bottomPlayerLeft.x >= topRight.x && bottomPlayerLeft.y >= bottomRight.y)) ||
-					((topPlayerRight.x <= topLeft.x &&	topPlayerRight.y <= topLeft.y) &&
-					(bottomPlayerRight.x <= bottomLeft.x && bottomPlayerRight.y <= bottomLeft.y))) {
+	// ||
+	// 	(this.left < actor.right && this.right > actor.right)  ||
+	// 	(this.right > actor.left && this.left < actor.left)  ||
+	// 	(this.top < actor.bottom && this.bottom > actor.bottom)
 
-				return false;
-			}
+
+		if (this !== actor) {
+			// return false;
 			// else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
 			// 	&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
 			// 	return false;
 			// }
-			else if ((this.left < actor.left && this.right > actor.right && this.top < actor.top
-				&& this.bottom > actor.bottom)) {
+			if (((topPlayerLeft.x >= topRight.x && topPlayerLeft.y <= topRight.y) &&
+				(bottomPlayerLeft.x >= topRight.x && bottomPlayerLeft.y >= bottomRight.y)) ||
+				((topPlayerRight.x <= topLeft.x && topPlayerRight.y <= topLeft.y) &&
+					(bottomPlayerRight.x <= bottomLeft.x && bottomPlayerRight.y <= bottomLeft.y))) {
+
+				return false;
+			}
+			// else return false;
+
+			else if((this.left < actor.left && this.right > actor.right && this.top < actor.top
+				&& this.bottom > actor.bottom) ||
+					(this.left < actor.right && this.right > actor.right)  ||
+					(this.right > actor.left && this.left < actor.left)  ||
+					(this.top < actor.bottom && this.bottom > actor.bottom))
+			{
 				return true;
 			}
+
 			// else return false;
 		}
 
-
-
+		else {
+			return false;
+		}
 
 
 		// else if () {
@@ -155,8 +186,5 @@ class Actor {
 		// 	&& bottomActorRight > bottomRight) {
 		// 	return true;
 		// }
-		else {
-			return false;
-		}
 	}
 }
