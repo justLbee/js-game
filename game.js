@@ -105,32 +105,48 @@ class Actor {
 		console.log(this.right + ' ' + actor.right);
 		console.log(this.top + ' ' + actor.top);
 		console.log(this.bottom + ' ' + actor.bottom);
-		// if (topLeft.x < topRight.x && topLeft.y < bottomRight.y && topLeft.x < bottomLeft.x) {
-		// 	if (topPlayerLeft >= topRight && topPlayerRight <= topLeft && bottomPlayerLeft >= bottomRight
-		// 		&& bottomPlayerRight <= topRight) {
-		// 		return true;
-		// 	}
-		// 	if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
-		// 		&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
-		// 		return true;
-		// 	}
+
+		// if (this.left !== actor.left && this.right !== actor.right && this.top !== actor.top &&
+		// 	this.bottom !== actor.bottom) {
+		// 	return true;
 		// }
-		if (this.left !== actor.left && this.right !== actor.right && this.top !== actor.top &&
-			this.bottom !== actor.bottom) {
-			return true;
+		// else if (topPlayerLeft >= topRight && topPlayerRight <= topLeft && bottomPlayerLeft >= bottomRight
+		// 	&& bottomPlayerRight <= topRight) {
+		// 	return true;
+		// }
+		// else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
+		// 	&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
+		// 	return true;
+		// }
+		// else if ((this.left < actor.left && this.right > actor.right && this.top < actor.top
+		// 	&& this.bottom > actor.bottom) || this.left === actor.left) {
+		// 	return true;
+		// }
+		console.log(`Sravnenie: ${this.left} >= ${actor.left} : ${this.left < actor.left}`);
+		if(!(this === actor)) {
+
+			if (((topPlayerLeft.x >= topRight.x && topPlayerLeft.y <= topRight.y) &&
+					(bottomPlayerLeft.x >= topRight.x && bottomPlayerLeft.y >= bottomRight.y)) ||
+					((topPlayerRight.x <= topLeft.x &&	topPlayerRight.y <= topLeft.y) &&
+					(bottomPlayerRight.x <= bottomLeft.x && bottomPlayerRight.y <= bottomLeft.y))) {
+
+				return false;
+			}
+			// else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
+			// 	&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
+			// 	return false;
+			// }
+			else if ((this.left < actor.left && this.right > actor.right && this.top < actor.top
+				&& this.bottom > actor.bottom)) {
+				return true;
+			}
+			// else return false;
 		}
-		else if (topPlayerLeft >= topRight && topPlayerRight <= topLeft && bottomPlayerLeft >= bottomRight
-			&& bottomPlayerRight <= topRight) {
-			return true;
-		}
-		else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
-			&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
-			return true;
-		}
-		else if ((this.left < actor.left && this.right > actor.right && this.top < actor.top
-			&& this.bottom > actor.bottom) || this.left === actor.left) {
-			return true;
-		}
+
+
+
+
+
 		// else if () {
 		// 	return true;
 		// }
