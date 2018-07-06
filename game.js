@@ -28,11 +28,11 @@ class Vector {
 
 class Actor {
 	constructor(position = new Vector(), size = new Vector(1, 1), speed = new Vector()) {
-		Object.defineProperty(this, "type", {
-			value: "actor",
-			writable: false, // запретить присвоение "user.name="
-			configurable: false // запретить удаление "delete user.name"
-		});
+		// Object.defineProperty(this, "type", {
+		// 	value: "actor",
+		// 	writable: false,
+		// 	configurable: true
+		// });
 		this.act = function () {
 
 		};
@@ -63,6 +63,10 @@ class Actor {
 		}
 	}
 
+	get type() {
+		return 'actor';
+	}
+
 	isIntersect(actor) {
 		if (!(actor instanceof Actor)) {
 			throw Error("Аргумент не является экземпляром Actor");
@@ -81,9 +85,9 @@ class Actor {
 				return false;
 			}
 			else {
-				if(
+				if (
 					((this.left === actor.left || this.right === actor.right) && this.top <= actor.top && this.bottom >= actor.bottom) ||
-					((this.bottom === actor.bottom || this.top === actor.top) && this.left <= actor.left && this.right >= actor.right) ){
+					((this.bottom === actor.bottom || this.top === actor.top) && this.left <= actor.left && this.right >= actor.right)) {
 					return false;
 				}
 			}
@@ -97,21 +101,22 @@ class Actor {
 }
 
 class Level {
-	constructor(grid, actors) {
+	constructor(grid, actors = []) {
 		this.grid = grid;
 		this.actors = actors;
 		this.status = null;
 		this.finishDelay = 1;
 
-		if(this.actors) {
+		if (this.actors) {
 			this.player = this.actors.find(actor => actor.type === 'player');
 		}
 
-		if(this.grid) {
-			// console.log(grid.length);
+		if (this.grid) {
+			console.log(grid.length);
 			this.height = this.grid.length;
-			this.width = this.grid[0].length;
-
+			for (let element of this.grid) {
+				this.width = Math.max(element.length);
+			}
 		}
 		else {
 			this.height = 0;
@@ -121,30 +126,43 @@ class Level {
 	}
 
 	isFinished() {
-		if(this.status !== null && this.finishDelay < 0) {
+		if (this.status !== null && this.finishDelay < 0) {
 			return true;
 		}
 		else return false;
 	}
 
 	actorAt(actor) {
-		if(actor) {
-			if(this.actors.length === 1) {
+		if (!actor || !(actor instanceof Actor)) {
+			throw Error('Не движущийся объект');
+		}
+		else if (actor) {
+			if (this.actors.length === 1) {
 				return undefined;
 			}
 
-			for(let obj in this.actors) {
-				if(obj.isIntersect(actor)) {
+			for (let obj in this.actors) {
+				console.log(obj);
+				if (obj.isIntersect(actor)) {
 					return obj;
 				}
-				else {
-					return
-				}
 			}
+		}
+	}
+}
 
-		}
-		else if(!actor || !(actor instanceof Actor)){
-			throw Error('Не движущийся объект');
-		}
+class Player extends Actor {
+	constructor(vector = new Vector()) {
+		let position = new Vector(vector.x, vector.y - 0.5);
+		let size = new Vector(0.8, 1.5);
+		let speed = new Vector(0, 0);
+		super(position, size, speed);
+
+		Object.defineProperty(this, 'type', {
+			writable: false,
+			value: 'player'
+		});
+
+		console.log(this);
 	}
 }
