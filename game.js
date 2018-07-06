@@ -68,103 +68,14 @@ class Actor {
 			throw Error("Аргумент не является экземпляром Actor");
 		}
 
-		let topLeft = {
-			x: actor.left,
-			y: actor.top
-		};
-		let topRight = {
-			x: actor.right,
-			y: actor.top
-		};
-		let bottomLeft = {
-			x: actor.left,
-			y: actor.bottom
-		};
-		let bottomRight = {
-			x: actor.right,
-			y: actor.bottom
-		};
-
-		let topPlayerLeft = {
-			x: this.left,
-			y: this.top
-		};
-		let topPlayerRight = {
-			x: this.right,
-			y: this.top
-		};
-		let bottomPlayerLeft = {
-			x: this.left,
-			y: this.bottom
-		};
-		let bottomPlayerRight = {
-			x: this.right,
-			y: this.bottom
-		};
-		// console.log(this.left + ' ' + actor.left);
-		// console.log(this.right + ' ' + actor.right);
-		// console.log(this.top + ' ' + actor.top);
-		// console.log(this.bottom + ' ' + actor.bottom);
-
-		// if (this.left !== actor.left && this.right !== actor.right && this.top !== actor.top &&
-		// 	this.bottom !== actor.bottom) {
-		// 	return true;
-		// }
-		// else if (topPlayerLeft >= topRight && topPlayerRight <= topLeft && bottomPlayerLeft >= bottomRight
-		// 	&& bottomPlayerRight <= topRight) {
-		// 	return true;
-		// }
-		// else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
-		// 	&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
-		// 	return true;
-		// }
-		// else if ((this.left < actor.left && this.right > actor.right && this.top < actor.top
-		// 	&& this.bottom > actor.bottom) || this.left === actor.left) {
-		// 	return true;
-		// }
-		// console.log(`Sravnenie: ${this.left} < ${actor.left} : ${this.left < actor.left}`);
-		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
-		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
-		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
-		// console.log(`Sravnenie: ${this.left} > ${actor.left} : ${this.left > actor.left}`);
-		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
-		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
-		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
-		// console.log(`Sravnenie: ${this.left} < ${actor.left} : ${this.left < actor.left}`);
-		// console.log(`Sravnenie: ${this.right} > ${actor.right} : ${this.right > actor.right}`);
-		// console.log(`Sravnenie: ${this.bottom} >= ${actor.bottom} : ${this.bottom >= actor.bottom}`);
-		// console.log(`Sravnenie: ${this.top} <= ${actor.top} : ${actor.right && this.top <= actor.top}`);
-		// console.log(`${this !== actor}`);
-
-		console.log(`Sravnenie: ${this.left} >= ${actor.right} : ${this.left >= actor.right}`);
-		console.log(`Sravnenie: ${this.right} <= ${actor.left} : ${this.right <= actor.left}`);
-		console.log(`Sravnenie: ${this.bottom} <= ${actor.top} : ${this.bottom <= actor.top}`);
-		console.log(`Sravnenie: ${this.top} >= ${actor.bottom} : ${this.top >= actor.bottom}`);
-		console.log(`${(this.left >= actor.right || this.right <= actor.left)
-		|| (this.bottom <= actor.top || this.top >= actor.bottom)}`);
-
-		// ||
-		// 	(this.left < actor.right && this.right > actor.right)  ||
-		// 	(this.right > actor.left && this.left < actor.left)  ||
-		// 	(this.top < actor.bottom && this.bottom > actor.bottom)
-
+		// console.log(`Sravnenie: ${this.left} >= ${actor.right} : ${this.left >= actor.right}`);
+		// console.log(`Sravnenie: ${this.right} <= ${actor.left} : ${this.right <= actor.left}`);
+		// console.log(`Sravnenie: ${this.bottom} <= ${actor.top} : ${this.bottom <= actor.top}`);
+		// console.log(`Sravnenie: ${this.top} >= ${actor.bottom} : ${this.top >= actor.bottom}`);
+		// console.log(`${(this.left >= actor.right || this.right <= actor.left)
+		// || (this.bottom <= actor.top || this.top >= actor.bottom)}`);
 
 		if (this !== actor) {
-			// return false;
-			// else if ((topPlayerLeft === topLeft && topPlayerRight === topRight && bottomPlayerLeft === bottomLeft.y
-			// 	&& bottomPlayerRight === bottomRight) && (actor.pos.x < 0 || actor.pos.y < 0)) {
-			// 	return false;
-			// }
-			// if((this.left < actor.left && this.right > actor.right && this.top < actor.top
-			// 	&& this.bottom > actor.bottom))
-			// {
-			// 	return true;
-			// }
-			// if((this.left < actor.right && this.right > actor.right)  ||
-			// 	(this.right > actor.left && this.left < actor.left)) {
-			// 	return true;
-			// }
-
 			if ((this.left >= actor.right || this.right <= actor.left)
 				|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
 				return false;
@@ -177,24 +88,63 @@ class Actor {
 				}
 			}
 			return true;
-			// else return false;
-
-
-			// else return false;
 		}
 
 		else {
 			return false;
 		}
+	}
+}
 
+class Level {
+	constructor(grid, actors) {
+		this.grid = grid;
+		this.actors = actors;
+		this.status = null;
+		this.finishDelay = 1;
 
-		// else if () {
-		// 	return true;
-		// }
-		// else
-		// else if(topActorLeft < topLeft && topActorRight > topRight && bottomActorLeft > bottomLeft
-		// 	&& bottomActorRight > bottomRight) {
-		// 	return true;
-		// }
+		if(this.actors) {
+			this.player = this.actors.find(actor => actor.type === 'player');
+		}
+
+		if(this.grid) {
+			// console.log(grid.length);
+			this.height = this.grid.length;
+			this.width = this.grid[0].length;
+
+		}
+		else {
+			this.height = 0;
+			this.width = 0;
+		}
+		// console.log(this.height + ' ' + this.width);
+	}
+
+	isFinished() {
+		if(this.status !== null && this.finishDelay < 0) {
+			return true;
+		}
+		else return false;
+	}
+
+	actorAt(actor) {
+		if(actor) {
+			if(this.actors.length === 1) {
+				return undefined;
+			}
+
+			for(let obj in this.actors) {
+				if(obj.isIntersect(actor)) {
+					return obj;
+				}
+				else {
+					return
+				}
+			}
+
+		}
+		else if(!actor || !(actor instanceof Actor)){
+			throw Error('Не движущийся объект');
+		}
 	}
 }
