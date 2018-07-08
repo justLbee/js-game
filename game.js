@@ -111,18 +111,8 @@ class Level {
 			this.player = this.actors.find(actor => actor.type === 'player');
 		}
 
-		if (this.grid) {
-			console.log(grid.length);
-			this.height = this.grid.length;
-			for (let element of this.grid) {
-				this.width = Math.max(element.length);
-			}
-		}
-		else {
-			this.height = 0;
-			this.width = 0;
-		}
-		// console.log(this.height + ' ' + this.width);
+    this.height = (this.grid) ? this.grid.length : 0;
+    this.width = (this.grid) ? Math.max(...(this.grid.map((line) => (line.length)))) : 0; 
 	}
 
 	isFinished() {
@@ -133,22 +123,42 @@ class Level {
 	}
 
 	actorAt(actor) {
+    console.log(actor);
 		if (!actor || !(actor instanceof Actor)) {
 			throw Error('Не движущийся объект');
 		}
 		else if (actor) {
 			if (this.actors.length === 1) {
 				return undefined;
-			}
-
-			for (let obj in this.actors) {
-				console.log(obj);
-				if (obj.isIntersect(actor)) {
-					return obj;
-				}
+      }
+      else {
+        // console.log(this.actors);
+        for (let obj of this.actors) {
+          // console.log(`Object:`);
+          // console.log(obj);
+          // console.log(`Actor:`);
+          // console.log(actor);
+          console.log(actor.isIntersect(obj));
+          if (actor.isIntersect(obj)) {
+            return obj;
+          }
+          else {
+            continue;
+          }
+      }
+      return undefined;
 			}
 		}
-	}
+  }
+  
+  obstacleAt(positionAt, size) {
+    if(!(positionAt instanceof Vector) || !(size instanceof Vector)) {
+      throw Error('Положение или размер не вектор');
+    }
+    else {
+      // if()
+    }
+  }
 }
 
 class Player extends Actor {
