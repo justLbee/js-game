@@ -201,7 +201,66 @@ class Level {
 }
 
 class LevelParser {
-	
+	constructor(catalog) {
+		this.catalog = catalog;
+	}
+
+	actorFromSymbol(symbol) {
+		if(symbol) {
+			return (this.catalog.hasOwnProperty(symbol)) ? this.catalog[symbol] : undefined;
+		}
+	}
+
+	obstacleFromSymbol(symbol) {
+		if(symbol) {
+			if(symbol === 'x') {
+				return 'wall';
+			}
+			else if(symbol === '!') {
+				return 'lava';
+			}
+		}
+	}
+
+	createGrid(gridPlans) {
+		let arrayGrid = [];
+		if(gridPlans.length === 0) {
+			return arrayGrid;
+		}
+		else {
+			arrayGrid = gridPlans.map(plan => {
+				return plan.replace().split('').map(symbol => {
+					return this.obstacleFromSymbol(symbol) && symbol.replace(symbol, this.obstacleFromSymbol(symbol));
+				});
+			});
+			return arrayGrid;
+		}
+	}
+
+	createActors(actorsPlan) {
+		let arrayActors = [];
+		// console.log(this.catalog);
+		if(actorsPlan.length === 0 || this.catalog === undefined) {
+			return arrayActors;
+		}
+		else {
+			actorsPlan.forEach(symbol => {
+				if(this.catalog.hasOwnProperty(symbol)) {
+					// console.log(this.catalog[symbol].constructor);
+					// console.log(Actor.constructor);
+					if(this.catalog[symbol] === Actor) {
+						// console.log('hui');
+						console.log(this.catalog);
+						let position = new Vector(1, actorsPlan.indexOf(symbol));
+						console.log(position);
+						arrayActors.push(new Actor(position));
+					}
+				}
+			});
+			// console.log(arrayActors);
+			return arrayActors;
+		}
+	}
 }
 
 class Player extends Actor {
