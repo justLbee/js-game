@@ -261,6 +261,107 @@ class LevelParser {
 			return arrayActors;
 		}
 	}
+
+	parse(parsePlan) {
+		return new Level(parsePlan);
+	}
+}
+
+class Fireball extends Actor{
+	constructor(position = new Vector(0, 0), speed = new Vector(0, 0)) {
+		super(position, new Vector(1, 1), speed);
+		this.pos = position;
+	}
+
+	get type() {
+		return 'fireball';
+	}
+
+	getNextPosition(time = 1) {
+		let newPositionX = this.pos.x + this.speed.x * time;
+		let newPositionY = this.pos.y + this.speed.y * time;
+
+		return new Vector(newPositionX, newPositionY);
+	}
+
+	handleObstacle() {
+		this.speed.x *= -1;
+		this.speed.y *= -1;
+	}
+
+	act(time, level) {
+
+	}
+}
+
+class HorizontalFireball extends Fireball{
+	constructor(position) {
+		super(position);
+		this.speed = new Vector(2, 0);
+	}
+}
+
+class VerticalFireball extends Fireball{
+	constructor(position) {
+		super(position);
+		this.speed = new Vector(0, 2);
+	}
+}
+
+class FireRain extends Fireball {
+	constructor(position) {
+		super(position);
+		this.position = position;
+		this.speed = new Vector(0, 3);
+	}
+
+	handleObstacle() {
+		this.speed.x *= 1;
+		this.speed.y *= 1;
+		this.pos.x = this.position.x;
+		this.pos.y = this.position.y;
+	}
+}
+
+class Coin extends Actor{
+	constructor(position = new Vector()) {
+		super(position, new Vector(0.6, 0.6));
+		this.pos.x = position.x + 0.2;
+		this.pos.y = position.y + 0.1;
+
+		const MINSPRING = 0;
+		const MAXSTRING = 2 * Math.PI;
+
+		this.spring = Math.random() * (MAXSTRING - MINSPRING) + MINSPRING;
+		this.springSpeed = 8;
+		this.springDist = 0.07;
+
+		Object.defineProperty(this, 'type', {
+			writable: false,
+			value: 'coin'
+		});
+	}
+
+	updateSpring(time = 1) {
+		this.spring += this.springSpeed * time;
+	}
+
+	getSpringVector() {
+		let newPosY =  Math.sin(this.spring) * this.springDist;
+
+		return new Vector(0, newPosY);
+	}
+
+	getNextPosition(time = 1) {
+		this.spring += this.springSpeed * time;
+
+		let newPosY = this.pos.y;
+		let newPos = new Vector(this.pos.x, newPosY + 1);
+		let vectorPos = this.getSpringVector();
+		newPos.y += vectorPos.y;
+ 		return newPos;
+		// return new Vector(this.pos.x, newPosY);
+	}
 }
 
 class Player extends Actor {
