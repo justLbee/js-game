@@ -156,9 +156,52 @@ class Level {
       throw Error('Положение или размер не вектор');
     }
     else {
-      // if()
+    	console.log(positionAt);
+			console.log('size:');
+			console.log(size);
+    	console.log('grid:');
+    	console.log(this.grid);
+    	console.log(`width: ${this.width}, height: ${this.height}`);
+    	let square = size.x * size.y;
+
+			if(positionAt.x < 0 || positionAt.x >= this.width || positionAt.y < 0 || square >= this.width) {
+				return 'wall';
+			}
+			else if(positionAt.y >= this.height) {
+				return 'lava';
+			}
     }
   }
+
+  removeActor(actor) {
+		if(actor) {
+			this.actors.splice(this.actors.indexOf(actor), 1);
+		}
+	}
+
+	noMoreActors(actorType) {
+		console.log(this.actors.find(actor => actor.type === actorType));
+
+		return !(this.actors.find(actor => actor.type === actorType)) || this.actors.length === 0;
+	}
+
+	playerTouched(type, actor = new Actor()) {
+		if(this.status === null) {
+			if(type === 'lava' || type === 'fireball') {
+				this.status = 'lost';
+			}
+			else if(type === 'coin' && actor.type === 'coin') {
+				this.removeActor(actor);
+				if(this.noMoreActors('coin')) {
+					this.status = 'won';
+				}
+			}
+		}
+	}
+}
+
+class LevelParser {
+	
 }
 
 class Player extends Actor {
