@@ -80,14 +80,17 @@ class Actor {
 		// || (this.bottom <= actor.top || this.top >= actor.bottom)}`);
 
 		if (this !== actor) {
+			console.log(this);
+			console.log(actor);
 			if ((this.left >= actor.right || this.right <= actor.left)
 				|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
+
 				return false;
 			}
 			else {
 				if (
-					((this.left === actor.left || this.right === actor.right) && this.top <= actor.top && this.bottom >= actor.bottom) ||
-					((this.bottom === actor.bottom || this.top === actor.top) && this.left <= actor.left && this.right >= actor.right)) {
+					((this.left === actor.left || this.right === actor.right) && this.top < actor.top && this.bottom > actor.bottom) ||
+					((this.bottom === actor.bottom || this.top === actor.top) && this.left < actor.left && this.right > actor.right)) {
 					return false;
 				}
 			}
@@ -116,37 +119,23 @@ class Level {
 	}
 
 	isFinished() {
-		if (this.status !== null && this.finishDelay < 0) {
-			return true;
-		}
-		else return false;
+		return (this.status !== null && this.finishDelay < 0);
 	}
 
-	actorAt(actor) {
-    console.log(actor);
-		if (!actor || !(actor instanceof Actor)) {
+	actorAt(movingObject) {
+		console.log('actor:');
+    console.log(movingObject);
+    console.log('actors:');
+    console.log(this.actors);
+		if (!movingObject || !(movingObject instanceof Actor)) {
 			throw Error('Не движущийся объект');
 		}
-		else if (actor) {
+		else if (movingObject) {
 			if (this.actors.length === 1) {
 				return undefined;
       }
       else {
-        // console.log(this.actors);
-        for (let obj of this.actors) {
-          // console.log(`Object:`);
-          // console.log(obj);
-          // console.log(`Actor:`);
-          // console.log(actor);
-          console.log(actor.isIntersect(obj));
-          if (actor.isIntersect(obj)) {
-            return obj;
-          }
-          else {
-            continue;
-          }
-      }
-      return undefined;
+				return this.actors.find(actor => actor.isIntersect(movingObject));
 			}
 		}
   }
@@ -156,20 +145,42 @@ class Level {
       throw Error('Положение или размер не вектор');
     }
     else {
-    	console.log(positionAt);
+			// let square = positionAt.x * size.x;
+			// console.log(positionAt);
 			console.log('size:');
 			console.log(size);
     	console.log('grid:');
-    	console.log(this.grid);
-    	console.log(`width: ${this.width}, height: ${this.height}`);
-    	let square = size.x * size.y;
+    	console.log(this);
+    	console.log('element');
+			// positionAt.x = parseFloat(positionAt.x.toFixed());
+			// positionAt.y = parseFloat(positionAt.y.toFixed());
+			positionAt.x = Math.floor(positionAt.x);
+			positionAt.y = Math.floor(positionAt.y);
+			size.x = Math.floor(size.x);
+			size.y = Math.floor(size.y);
 
-			if(positionAt.x < 0 || positionAt.x >= this.width || positionAt.y < 0 || square >= this.width) {
-				return 'wall';
-			}
-			else if(positionAt.y >= this.height) {
+			if(positionAt.y >= this.height) {
 				return 'lava';
 			}
+			else if (positionAt.x < 0 || (positionAt.x + size.x) > this.width || positionAt.y < 0){
+				return 'wall';
+			}
+			else {
+				for(let i = 0; i < this.height; i++) {
+					if(i === positionAt.y + size.y) {
+						for(let j = 0; j < this.width; j++) {
+							if(j === positionAt.x + size.x) {
+								// console.log(this.grid[i][j]);
+								return this.grid[i][j];
+							}
+						}
+					}
+				}
+			}
+			// else if(this.grid[positionAt.x + size.x]) {
+			// 	return this.grid[positionAt.x + size.x];
+			// }
+			// return undefined;
     }
   }
 
@@ -375,7 +386,5 @@ class Player extends Actor {
 			writable: false,
 			value: 'player'
 		});
-
-		console.log(this);
 	}
 }
