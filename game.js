@@ -250,20 +250,6 @@ class LevelParser {
 			return arrayActors;
 		}
 		else {
-			let objectPositionArr = [];
-
-			// for(let i = 0; i < actorsPlan.length; i++){
-			// 	for(let j = 0; j < actorsPlan[i].length; j++) {
-			// 		console.log(this.actorFromSymbol(actorsPlan[i][j]));
-			// 		if(actorsPlan[i][j] && this.actorFromSymbol(actorsPlan[i][j]) &&
-			// 			this.actorFromSymbol(actorsPlan[i][j]) === Actor) {
-			// 			// console.log(actorsPlan[i][j]);
-			// 			objectPositionArr.push(new Vector(j, i));
-			// 		}
-			// 	}
-			// }
-			// console.log(actorsPlan);
-
 			return actorsPlan.reduce((newGrid, actorsPlanString, positionY) => {
 				actorsPlanString.split('').forEach((symbol, positionX) => {
 					const actorConst = this.actorFromSymbol(symbol);
@@ -278,23 +264,6 @@ class LevelParser {
 
 				return newGrid;
 			}, []);
-
-			// objectPositionArr.forEach(position => {
-			// 	arrayActors.push(new Actor(position));
-			// });
-
-			// console.log('plan');
-			// console.log(actorsPlan);
-			// console.log('position');
-			// console.log(objectPositionArr);
-			// actorsPlan.forEach(symbolString => {
-			// 	let objectPositionX = symbolString.find(symbol => {
-			// 		return symbolString.indexOf(symbol);
-			// 	});
-			// 	console
-			// });
-			// console.log(arrayActors);
-			// return arrayActors;
 		}
 	}
 
