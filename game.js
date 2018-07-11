@@ -33,9 +33,9 @@ class Actor {
 		// 	writable: false,
 		// 	configurable: true
 		// });
-		this.act = function () {
-
-		};
+		// this.act = function () {
+		//
+		// };
 
 		if (position instanceof Vector) {
 			this.pos = position;
@@ -62,6 +62,9 @@ class Actor {
 			throw Error("Третий аргумент не является вектором");
 		}
 	}
+	act() {
+
+	}
 
 	get type() {
 		return 'actor';
@@ -80,8 +83,8 @@ class Actor {
 		// || (this.bottom <= actor.top || this.top >= actor.bottom)}`);
 
 		if (this !== actor) {
-			console.log(this);
-			console.log(actor);
+			// console.log(this);
+			// console.log(actor);
 			if ((this.left >= actor.right || this.right <= actor.left)
 				|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
 
@@ -123,10 +126,10 @@ class Level {
 	}
 
 	actorAt(movingObject) {
-		console.log('actor:');
-		console.log(movingObject);
-		console.log('actors:');
-		console.log(this.actors);
+		// console.log('actor:');
+		// console.log(movingObject);
+		// console.log('actors:');
+		// console.log(this.actors);
 		if (!movingObject || !(movingObject instanceof Actor)) {
 			throw Error('Не движущийся объект');
 		}
@@ -145,14 +148,6 @@ class Level {
 			throw Error('Положение или размер не вектор');
 		}
 		else {
-			// let square = positionAt.x * size.x;
-			// console.log(positionAt);
-			// console.log('size:');
-			// console.log(size);
-			// console.log('grid:');
-			// console.log(this);
-			// console.log('element');
-
 			positionAt.x = Math.floor(positionAt.x);
 			positionAt.y = Math.floor(positionAt.y);
 			size.x = Math.floor(size.x);
@@ -169,7 +164,6 @@ class Level {
 					if (i === positionAt.y + size.y) {
 						for (let j = 0; j < this.width; j++) {
 							if (j === positionAt.x + size.x) {
-								// console.log(this.grid[i][j]);
 								return this.grid[i][j];
 							}
 						}
@@ -186,7 +180,7 @@ class Level {
 	}
 
 	noMoreActors(actorType) {
-		console.log(this.actors.find(actor => actor.type === actorType));
+		// console.log(this.actors.find(actor => actor.type === actorType));
 
 		return !(this.actors.find(actor => actor.type === actorType)) || this.actors.length === 0;
 	}
@@ -244,10 +238,8 @@ class LevelParser {
 	}
 
 	createActors(actorsPlan) {
-		let arrayActors = [];
-		// console.log(actorsPlan);
 		if (actorsPlan.length === 0 || this.catalog === undefined) {
-			return arrayActors;
+			return [];
 		}
 		else {
 			return actorsPlan.reduce((newGrid, actorsPlanString, positionY) => {
@@ -268,7 +260,11 @@ class LevelParser {
 	}
 
 	parse(parsePlan) {
-		return new Level(parsePlan);
+		let level = new Level(parsePlan);
+		level.grid = this.createGrid(parsePlan);
+		level.actors = this.createActors(parsePlan);
+
+		return level;
 	}
 }
 
@@ -295,7 +291,14 @@ class Fireball extends Actor {
 	}
 
 	act(time, level) {
+		let newPosition = this.getNextPosition(time);
 
+		if (level.obstacleAt(newPosition, this.size)) {
+			this.handleObstacle();
+		}
+		else{
+			this.pos = newPosition;
+		}
 	}
 }
 
@@ -330,15 +333,8 @@ class FireRain extends Fireball {
 
 class Coin extends Actor {
 	constructor(position = new Vector()) {
-		super(position, new Vector(0.6, 0.6));
-		this.pos.x = position.x + 0.2;
-		this.pos.y = position.y + 0.1;
-
-		Object.defineProperty(this, 'startPos', {
-			writable: false,
-			value: position
-		});
-		// this.startPos = new Vector(this.pos.x, this.pos.y);
+		super(position.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
+		this.startPos = position;
 
 		const MINSPRING = 0;
 		const MAXSTRING = 2 * Math.PI;
@@ -358,21 +354,15 @@ class Coin extends Actor {
 	}
 
 	getSpringVector() {
-		let newPosY = Math.sin(this.spring * this.springDist);
+		let newPosY = Math.sin(this.spring) * this.springDist;
 
 		return new Vector(0, newPosY);
 	}
 
 	getNextPosition(time = 1) {
 		this.updateSpring(time);
-		// let newPosY = POSY + this.getSpringVector().y;
-		// newPosY += this.getSpringVector().y;
-		return this.startPos.plus(this.getSpringVector());
 
-		// let vectorPos = this.getSpringVector();
-		// newPos.y += vectorPos.y;
-		// return newPos;
-		// return new Vector(this.pos.x, newPosY);
+		return this.startPos.plus(this.getSpringVector());
 	}
 }
 
