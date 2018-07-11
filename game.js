@@ -333,8 +333,11 @@ class FireRain extends Fireball {
 
 class Coin extends Actor {
 	constructor(position = new Vector()) {
-		super(position.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
-		this.startPos = position;
+		super(position.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6), new Vector());
+		// this.pos = position.plus(new Vector(0.2, 0.1));
+
+		this.position = position;
+		this.positionStart = new Vector(position.x, position.y);
 
 		const MINSPRING = 0;
 		const MAXSTRING = 2 * Math.PI;
@@ -362,7 +365,16 @@ class Coin extends Actor {
 	getNextPosition(time = 1) {
 		this.updateSpring(time);
 
-		return this.startPos.plus(this.getSpringVector());
+		console.log(this.position);
+		console.log(this.getSpringVector());
+		// console.log(this.positionStart);
+		this.position.y = this.positionStart.y + this.getSpringVector().y;
+		return this.position;
+		// return this.position;
+	}
+
+	act(time) {
+		this.pos = this.getNextPosition(time);
 	}
 }
 
