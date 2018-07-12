@@ -66,16 +66,7 @@ class Actor {
 			throw Error("Аргумент не является экземпляром Actor");
 		}
 
-		// console.log(`Sravnenie: ${this.left} >= ${actor.right} : ${this.left >= actor.right}`);
-		// console.log(`Sravnenie: ${this.right} <= ${actor.left} : ${this.right <= actor.left}`);
-		// console.log(`Sravnenie: ${this.bottom} <= ${actor.top} : ${this.bottom <= actor.top}`);
-		// console.log(`Sravnenie: ${this.top} >= ${actor.bottom} : ${this.top >= actor.bottom}`);
-		// console.log(`${(this.left >= actor.right || this.right <= actor.left)
-		// || (this.bottom <= actor.top || this.top >= actor.bottom)}`);
-
 		if (this !== actor) {
-			// console.log(this);
-			// console.log(actor);
 			if ((this.left >= actor.right || this.right <= actor.left)
 				|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
 
@@ -146,26 +137,15 @@ class Level {
 		}
 
 		let left = Math.floor(positionAt.x);
-		let right = Math.ceil(positionAt.x + size.x);
 		let top = Math.floor(positionAt.y);
-		let bottom = Math.ceil(positionAt.y + size.y);
 
-		if (left < 0 || right > this.width || top < 0) {
-			return 'wall';
-		}
-		if (bottom > this.height) {
-			return 'lava';
-		}
-
-		for (let i = top; i < bottom; i++) {
-				for (let j = left; j < right; j++) {
-					const obstacle = this.grid[i][j];
-					if (typeof obstacle !== 'undefined') {
-						return obstacle;
-					}
+		for (let i = top; i < (positionAt.y + size.y); i++) {
+			for (let j = left; j < (positionAt.x + size.x); j++) {
+				if (this.grid[i][j]) {
+					return this.grid[i][j];
 				}
+			}
 		}
-		return undefined;
 
 		// for (let i = Math.floor(positionAt.y); i < Math.ceil(positionAt.y + size.y); i++) {
 		// 	console.log('i:   ' + i);
@@ -220,14 +200,14 @@ class Level {
 		return !(this.actors.find(actor => actor.type === actorType)) || this.actors.length === 0;
 	}
 
-	playerTouched(type, actor = new Actor()) {
+	playerTouched(type, actor) {
 		if (this.status === null) {
 			if (type === 'lava' || type === 'fireball') {
 				this.status = 'lost';
 			}
-			else if (type === 'coin' && actor.type === 'coin') {
+			else if (type === 'coin') {
 				this.removeActor(actor);
-				if (this.noMoreActors('coin')) {
+				if (this.noMoreActors(type)) {
 					this.status = 'won';
 				}
 			}
@@ -412,7 +392,7 @@ class Coin extends Actor {
 
 class Player extends Actor {
 	constructor(position = new Vector()) {
-		super(position = position.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5), new Vector());
+		super(position.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5), new Vector());
 	}
 
 	get type() {
@@ -525,3 +505,38 @@ const actorDict = {
 const parser = new LevelParser(actorDict);
 runGame(schemas, parser, DOMDisplay)
 	.then(() => console.log('Вы выиграли приз!'));
+
+// const schemas = [
+// 	[
+// 		'         ',
+// 		'    =    ',
+// 		'         ',
+// 		'       o ',
+// 		' @    xxx',
+// 		'         ',
+// 		'xxx      ',
+// 		'!!!!!!!!!'
+// 	],
+// 	[
+// 		'      v  ',
+// 		'    v    ',
+// 		'  v      ',
+// 		'        o',
+// 		'        x',
+// 		'@   x    ',
+// 		'x        ',
+// 		'!!!!!!!!!'
+// 	]
+// ];
+// const actorDict = {
+// 	'@': Player,
+// 	'v': VerticalFireball,
+// 	'o': Coin,
+// 	'=': HorizontalFireball,
+// 	'|': FireRain
+//
+//
+// };
+// const parser = new LevelParser(actorDict);
+// runGame(schemas, parser, DOMDisplay)
+// 	.then(() => console.log('Вы  выиграли приз!'));
