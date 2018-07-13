@@ -368,11 +368,11 @@ class FireRain extends Fireball {
 
 class Coin extends Actor {
 	constructor(position = new Vector()) {
-		super(position.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6), new Vector());
-		// this.pos = position.plus(new Vector(0.2, 0.1));
+		super(position, new Vector(0.6, 0.6), new Vector());
+		this.pos = position.plus(new Vector(0.2, 0.1));
 
-		this.position = position;
-		this.positionStart = new Vector(position.x, position.y);
+		this.position = position.plus(new Vector(0.2, 0.1));
+		this.positionStart = new Vector(position.x + 0.2, position.y + 0.1);
 
 		const MINSPRING = 0;
 		const MAXSTRING = 2 * Math.PI;
