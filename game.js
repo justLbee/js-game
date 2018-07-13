@@ -8,59 +8,65 @@ class Vector {
 
 	plus(vector) {
 		if (!(vector instanceof Vector)) {
-			throw new Error("Не вектор");
+			throw new Error("Можно прибавлять к вектору только вектор типа Vector");
 		}
 
-		this.x += vector.x;
-		this.y += vector.y;
-
-		return this;
+		return new Vector(this.x + vector.x, this.y + vector.y);
 	}
 
 	times(n) {
-		this.x *= n;
-		this.y *= n;
-
-		return this;
+		return new Vector(this.x * n, this.y * n);
 	}
 }
 
 class Actor {
 	constructor(position = new Vector(), size = new Vector(1, 1), speed = new Vector()) {
-		if (position instanceof Vector) {
-			this.pos = position;
-			this.left = this.pos.x;
-			this.top = this.pos.y;
+		if ((!(position instanceof Vector)) || (!(size instanceof Vector)) || (!(speed instanceof Vector)))  {
+			throw new Error(`Arguments of 'position', 'size' or 'speed' of Actor class, can be set only by a vector with type of: Vector!`);
 		}
-		else {
-			throw Error("Первый аргумент не является вектором");
-		}
-
-		if (size instanceof Vector) {
-			this.size = size;
-			this.right = this.left + this.size.x;
-			this.bottom = this.top + this.size.y;
-		}
-		else {
-			throw Error("Второй аргумент не является вектором");
-		}
-
-		if (speed instanceof Vector) {
-			this.speed = speed;
-		}
-		else {
-			throw Error("Третий аргумент не является вектором");
-		}
+		this.pos = position;
+		this.size = size;
+		this.speed = speed;
 	}
 
-	act() {
+	get left() {
+		return this.pos.x;
+	}
 
+	get top() {
+		return this.pos.y;
+	}
+
+	get right() {
+		return this.pos.x + this.size.x;
+	}
+
+	get bottom() {
+		return this.pos.y + this.size.y;
 	}
 
 	get type() {
 		return 'actor';
 	}
 
+	act() {
+
+	}
+
+	// isIntersect(actor) {
+	// 	if ((!(actor instanceof Actor)) || (actor === undefined)) {
+	// 		throw new Error(`Argument of 'actor' can be set only by a object with type of: Actor, and isn't equal to 'undefined'!`);
+	// 	}
+	//
+	// 	if(!(this === actor)) {
+	// 		if((this.left <= actor.right) && (this.right >= actor.left) && (this.top <= actor.bottom) && this.bottom >= actor.top) {
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// 	// return (this === actor) ? false : ((this.left < actor.right) && (this.right > actor.left)
+	// 	// 	&& (this.top < actor.bottom) && (this.bottom > actor.top)) ? true : false;
+	// }
 	isIntersect(actor) {
 		if (!(actor instanceof Actor)) {
 			throw Error("Аргумент не является экземпляром Actor");
@@ -123,6 +129,20 @@ class Level {
 				return this.actors.find(actor => actor.isIntersect(movingObject));
 			}
 		}
+
+		// if(!(movingObject instanceof Actor)||(arguments.length === 0)){
+		// 	throw new Error('Аргумента нет либо передан не объект Actor');
+		// };
+		// if(this.grid === undefined ){
+		// 	return undefined;
+		// };
+		//
+		// for(let act of this.actors){
+		// 	if (movingObject.isIntersect(act)){
+		// 		return act;
+		// 	};
+		// };
+		// return undefined;
 	}
 
 	obstacleAt(positionAt, size) {
@@ -222,7 +242,7 @@ class LevelParser {
 
 	actorFromSymbol(symbol) {
 		if (symbol) {
-			return (this.catalog.hasOwnProperty(symbol)) ? this.catalog[symbol] : undefined;
+			return (typeof symbol !== 'undefined') ? this.catalog[symbol] : undefined;
 		}
 	}
 
