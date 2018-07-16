@@ -21,8 +21,8 @@ class Vector {
 
 class Actor {
 	constructor(position = new Vector(), size = new Vector(1, 1), speed = new Vector()) {
-		if ((!(position instanceof Vector)) || (!(size instanceof Vector)) || (!(speed instanceof Vector)))  {
-			throw new Error(`Arguments of 'position', 'size' or 'speed' of Actor class, can be set only by a vector with type of: Vector!`);
+		if (!(position instanceof Vector && size instanceof Vector && speed instanceof Vector)) {
+			throw Error(`Arguments of 'position', 'size' or 'speed' of Actor class, can be set only by a vector with type of: Vector!`);
 		}
 		this.pos = position;
 		this.size = size;
@@ -52,30 +52,31 @@ class Actor {
 	act() {
 
 	}
+
 	isIntersect(actor) {
 		if (!(actor instanceof Actor)) {
 			throw Error("Аргумент не является экземпляром Actor");
 		}
 
-		if (this !== actor) {
-			if ((this.left >= actor.right || this.right <= actor.left)
-				|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
+		if (this === actor) {
+			return false;
+		}
+
+		if ((this.left >= actor.right || this.right <= actor.left)
+			|| (this.bottom <= actor.top || this.top >= actor.bottom)) {
+
+			return false;
+		}
+		else {
+			if (
+				((this.left === actor.left || this.right === actor.right) && this.top < actor.top && this.bottom > actor.bottom) ||
+				((this.bottom === actor.bottom || this.top === actor.top) && this.left < actor.left && this.right > actor.right)) {
 
 				return false;
 			}
-			else {
-				if (
-					((this.left === actor.left || this.right === actor.right) && this.top < actor.top && this.bottom > actor.bottom) ||
-					((this.bottom === actor.bottom || this.top === actor.top) && this.left < actor.left && this.right > actor.right)) {
-					return false;
-				}
-			}
-			return true;
 		}
 
-		else {
-			return false;
-		}
+		return true;
 	}
 }
 
@@ -99,17 +100,12 @@ class Level {
 	}
 
 	actorAt(movingObject) {
-		if (!movingObject || !(movingObject instanceof Actor)) {
+		if (!(movingObject instanceof Actor)) {
 			throw Error('Не движущийся объект');
 		}
-		else if (movingObject) {
-			if (this.actors.length === 1) {
-				return undefined;
-			}
-			else {
-				return this.actors.find(actor => actor.isIntersect(movingObject));
-			}
-		}
+
+		return this.actors.find(actor => actor.isIntersect(movingObject));
+
 	}
 
 	obstacleAt(positionAt, size) {
@@ -136,9 +132,7 @@ class Level {
 	}
 
 	removeActor(actor) {
-		if (actor) {
-			this.actors.splice(this.actors.indexOf(actor), 1);
-		}
+		this.actors.splice(this.actors.indexOf(actor), 1);
 	}
 
 	noMoreActors(actorType) {
@@ -146,15 +140,17 @@ class Level {
 	}
 
 	playerTouched(type, actor) {
-		if (this.status === null) {
-			if (type === 'lava' || type === 'fireball') {
-				this.status = 'lost';
-			}
-			else if (type === 'coin') {
-				this.removeActor(actor);
-				if (this.noMoreActors(type)) {
-					this.status = 'won';
-				}
+		if (this.status !== null) {
+			return;
+		}
+
+		if (type === 'lava' || type === 'fireball') {
+			this.status = 'lost';
+		}
+		else if (type === 'coin') {
+			this.removeActor(actor);
+			if (this.noMoreActors(type)) {
+				this.status = 'won';
 			}
 		}
 	}
@@ -166,9 +162,7 @@ class LevelParser {
 	}
 
 	actorFromSymbol(symbol) {
-		if (symbol) {
-			return (typeof symbol !== 'undefined') ? this.catalog[symbol] : undefined;
-		}
+		return (this.catalog && symbol in this.catalog) ? this.catalog[symbol] : undefined;
 	}
 
 	obstacleFromSymbol(symbol) {
@@ -198,25 +192,21 @@ class LevelParser {
 	}
 
 	createActors(actorsPlan) {
-		if (actorsPlan.length === 0 || this.catalog === undefined) {
-			return [];
-		}
-		else {
-			return actorsPlan.reduce((newGrid, actorsPlanString, positionY) => {
-				actorsPlanString.split('').forEach((symbol, positionX) => {
-					const actorConst = this.actorFromSymbol(symbol);
-					if (actorConst) {
-						if (actorConst === Actor || Actor.prototype.isPrototypeOf(actorConst.prototype)) {
-							let position = new Vector(positionX, positionY);
+		return actorsPlan.reduce((newGrid, actorsPlanString, positionY) => {
+			actorsPlanString.split('').forEach((symbol, positionX) => {
+				const actorConst = this.actorFromSymbol(symbol);
 
-							newGrid.push(new actorConst(position));
-						}
+				if (actorConst) {
+					if (actorConst === Actor || Actor.prototype.isPrototypeOf(actorConst.prototype)) {
+						let position = new Vector(positionX, positionY);
+
+						newGrid.push(new actorConst(position));
 					}
-				});
+				}
+			});
 
-				return newGrid;
-			}, []);
-		}
+			return newGrid;
+		}, []);
 	}
 
 	parse(parsePlan) {
