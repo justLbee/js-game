@@ -136,10 +136,6 @@ class Level {
 		}
 	}
 
-	// removeActor(actor) {
-	// 	this.actors.splice(this.actors.findIndex(obj => (obj === actor)), 1);
-	// }
-
 	noMoreActors(actorType) {
 		return !(this.actors.find(actor => actor.type === actorType)) || this.actors.length === 0;
 	}
@@ -215,11 +211,7 @@ class LevelParser {
 	}
 
 	parse(parsePlan) {
-		let level = new Level(parsePlan);
-		level.grid = this.createGrid(parsePlan);
-		level.actors = this.createActors(parsePlan);
-
-		return level;
+		return new Level(this.createGrid(parsePlan), this.createActors(parsePlan));
 	}
 }
 
