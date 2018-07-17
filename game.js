@@ -131,9 +131,7 @@ class Level {
 	}
 
 	removeActor(actor) {
-		if(this.actors.indexOf(actor) !== -1) {
-			this.actors.splice(this.actors.indexOf(actor), 1);
-		}
+		this.actors.splice(this.actors.indexOf(actor), 1);
 	}
 
 	noMoreActors(actorType) {
