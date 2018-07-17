@@ -105,7 +105,6 @@ class Level {
 		}
 
 		return this.actors.find(actor => actor.isIntersect(movingObject));
-
 	}
 
 	obstacleAt(positionAt, size) {
@@ -132,8 +131,14 @@ class Level {
 	}
 
 	removeActor(actor) {
-		this.actors.splice(this.actors.indexOf(actor), 1);
+		if(this.actors.indexOf(actor) !== -1) {
+			this.actors.splice(this.actors.indexOf(actor), 1);
+		}
 	}
+
+	// removeActor(actor) {
+	// 	this.actors.splice(this.actors.findIndex(obj => (obj === actor)), 1);
+	// }
 
 	noMoreActors(actorType) {
 		return !(this.actors.find(actor => actor.type === actorType)) || this.actors.length === 0;
